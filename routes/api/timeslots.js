@@ -1,26 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
 const stringCapitalizeName = require('string-capitalize-name');
-const phoneFormatter = require('phone-formatter');
 
 
-const Speaker = require('../../models/Speaker');
+const Timeslot = require('../../models/Timeslot');
 
 // READ (ONE)
 router.get('/:id', (req, res) => {
-    Speaker.findById(req.params.id)
+    Timeslot.findById(req.params.id)
       .then((result) => {
         res.json(result);
       })
       .catch((err) => {
-        res.status(404).json({ success: false, msg: `No such speaker.` });
+        res.status(404).json({ success: false, msg: `No such time slot.` });
       });
   });
   
   // READ (ALL)
   router.get('/', (req, res) => {
-    Speaker.find({})
+    Timeslot.find({})
       .then((result) => {
         res.json(result);
       })
@@ -33,14 +31,13 @@ router.get('/:id', (req, res) => {
   router.post('/', (req, res) => {
   
   
-    let newSpeaker = new Speaker({
+    let newTimeslot = new Timeslot({
       name: sanitizeName(req.body.name),
-      email: sanitizeEmail(req.body.email),
-      phone: sanitizePhone(req.body.phone),
-      dayphone: sanitizePhone(req.body.dayphone)
+      end: req.body.end,
+      start: req.body.start
     });
   
-    newSpeaker.save()
+    newTimeslot.save()
       .then((result) => {
         res.json({
           success: true,
@@ -48,9 +45,8 @@ router.get('/:id', (req, res) => {
           result: {
             _id: result._id,
             name: result.name,
-            email: result.email,
-            phone: result.phone,
-            dayphone: result.dayphone
+            end: result.end,
+            start: result.start
           }
         });
       })
@@ -60,16 +56,12 @@ router.get('/:id', (req, res) => {
             res.status(400).json({ success: false, msg: err.errors.name.message });
             return;
           }
-          if (err.errors.email) {
-            res.status(400).json({ success: false, msg: err.errors.email.message });
+          if (err.errors.end) {
+            res.status(400).json({ success: false, msg: err.errors.end.message });
             return;
           }
-          if (err.errors.phone) {
-            res.status(400).json({ success: false, msg: err.errors.phone.message });
-            return;
-          }
-          if (err.errors.dayphone) {
-            res.status(400).json({ success: false, msg: err.errors.dayphone.message });
+          if (err.errors.start) {
+            res.status(400).json({ success: false, msg: err.errors.start.message });
             return;
           }
           // Show failed if all else fails for some reasons
@@ -81,16 +73,15 @@ router.get('/:id', (req, res) => {
   // UPDATE
   router.put('/:id', (req, res) => {
   
-    let updatedSpeaker = {
+    let updatedTimeslot = {
       name: sanitizeName(req.body.name),
-      email: sanitizeEmail(req.body.email),
-      phone: sanitizePhone(req.body.phone),
-      dayphone: sanitizePhone(req.body.dayphone)
+      end: req.body.end,
+      start: req.body.start
     };
   
-    Speaker.findOneAndUpdate({ _id: req.params.id }, updatedSpeaker, { runValidators: true, context: 'query' })
+    Timeslot.findOneAndUpdate({ _id: req.params.id }, updatedTimeslot, { runValidators: true, context: 'query' })
       .then((oldResult) => {
-        Speaker.findOne({ _id: req.params.id })
+        Timeslot.findOne({ _id: req.params.id })
           .then((newResult) => {
             res.json({
               success: true,
@@ -98,9 +89,8 @@ router.get('/:id', (req, res) => {
               result: {
                 _id: newResult._id,
                 name: newResult.name,
-                email: newResult.email,
-                phone: newResult.phone,
-                dayphone: newResult.dayphone
+                end: newResult.end,
+                start: newResult.start
               }
             });
           })
@@ -115,16 +105,12 @@ router.get('/:id', (req, res) => {
             res.status(400).json({ success: false, msg: err.errors.name.message });
             return;
           }
-          if (err.errors.email) {
-            res.status(400).json({ success: false, msg: err.errors.email.message });
+          if (err.errors.end) {
+            res.status(400).json({ success: false, msg: err.errors.end.message });
             return;
           }
-          if (err.errors.phone) {
-            res.status(400).json({ success: false, msg: err.errors.phone.message });
-            return;
-          }
-          if (err.errors.dayphone) {
-            res.status(400).json({ success: false, msg: err.errors.dayphone.message });
+          if (err.errors.start) {
+            res.status(400).json({ success: false, msg: err.errors.start.message });
             return;
           }
           // Show failed if all else fails for some reasons
@@ -136,7 +122,7 @@ router.get('/:id', (req, res) => {
   // DELETE
   router.delete('/:id', (req, res) => {
   
-    Speaker.findByIdAndRemove(req.params.id)
+    Timeslot.findByIdAndRemove(req.params.id)
       .then((result) => {
         res.json({
           success: true,
@@ -144,9 +130,8 @@ router.get('/:id', (req, res) => {
           result: {
             _id: result._id,
             name: result.name,
-            email: result.email,
-            phone: result.phone,
-            dayphone: result.dayphone
+            end: result.end,
+            start: result.start
           }
         });
       })
@@ -161,10 +146,3 @@ router.get('/:id', (req, res) => {
   sanitizeName = (name) => {
     return stringCapitalizeName(name);
   }
-  sanitizeEmail = (email) => {
-    return email.toLowerCase();
-  }
-sanitizePhone = (phone) => {
-if (phone == '') return 'N/A';
-return phoneFormatter.format(phone, "(NNN) NNN-NNNN");
-}

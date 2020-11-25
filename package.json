@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server",
-    "server": "nodemon server"
+    "server": "nodemon server",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Yen Le",
   "license": "MIT",
@@ -19,6 +21,8 @@
     "mongoose-unique-validator": "^2.0.3",
     "mongoose-validator": "^2.1.0",
     "phone-formatter": "^0.0.2",
+    "react-bootstrap": "^1.4.0",
+    "semantic-ui-react": "^2.0.1",
     "string-capitalize-name": "^1.0.3"
   },
   "devDependencies": {

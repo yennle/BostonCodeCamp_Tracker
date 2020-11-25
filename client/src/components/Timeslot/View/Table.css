@@ -1,0 +1,103 @@
+/* #search-bar-0 {
+  width: 100%;
+
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+} */
+#search-bar-0 {
+  border-radius: 25px;
+  border: 2px solid #060b26;
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.2);
+  color: #060b26;
+  font-size: 1.2rem;
+  height: 50px;
+}
+/* When the input field gets focus, change its width to 100% */
+#search-bar-0:focus {
+  width: 100%;
+  box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.3), 0 9px 20px 0 rgba(0, 0, 0, 0.2);
+  border: 2px solid rgb(94, 160, 247);
+}
+.search-label {
+  /* margin-left: 30%; */
+  width: 100%;
+}
+.add-btn {
+  height: 50px;
+  width: 80%;
+  border-radius: 25px;
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.2);
+  background: linear-gradient(90deg, #244872 0%, #0e1955 100%);
+  padding-top: 10px;
+  font-size: 1.1rem;
+  color: #fff;
+}
+.add-btn:hover {
+  background: linear-gradient(90deg, rgb(73, 141, 230) 0%, #3066a3 100%);
+  color: #fff;
+  box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.3), 0 9px 22px 0 rgba(0, 0, 0, 0.3);
+}
+.btn-action {
+  border-radius: 15px;
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.2);
+}
+table {
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.2);
+  border: none;
+  border-radius: 20px;
+}
+tr,
+th,
+thead {
+  border: none;
+}
+
+.table-bordered td,
+.table-bordered th {
+  border: none;
+}
+
+.pagination {
+  float: right;
+  margin-right: 20px;
+
+  border: #060b26;
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.2);
+}
+.pagination > li > a {
+  font-size: 1.2rem;
+  background: #244872;
+  border: #244872;
+}
+.page-item.active .page-link {
+  background-color: #2485f3;
+  border: #2485f3;
+}
+.page-item.disabled .page-link {
+  background-color: #d8dde4;
+  border: #d8dde4;
+  color: #244872;
+}
+a.page-link {
+  color: #fff;
+}
+.react-bootstrap-table-pagination-total {
+  float: left;
+  margin-top: 15 px;
+  margin-left: 20px;
+  font-size: 1.2rem;
+  color: #244872;
+}
+.confirm {
+  height: 300px;
+  width: 500px;
+  background-color: #647485;
+  color: #fff;
+  border-radius: 25px;
+  padding: 30px;
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.2);
+}
+.btn-confirm {
+  width: 160px;
+  height: 50px;
+}

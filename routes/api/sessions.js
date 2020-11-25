@@ -1,26 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
 const stringCapitalizeName = require('string-capitalize-name');
-const phoneFormatter = require('phone-formatter');
 
 
-const Speaker = require('../../models/Speaker');
+const Session = require('../../models/Session');
 
 // READ (ONE)
 router.get('/:id', (req, res) => {
-    Speaker.findById(req.params.id)
+    Session.findById(req.params.id)
       .then((result) => {
         res.json(result);
       })
       .catch((err) => {
-        res.status(404).json({ success: false, msg: `No such speaker.` });
+        res.status(404).json({ success: false, msg: `No such session.` });
       });
   });
   
   // READ (ALL)
   router.get('/', (req, res) => {
-    Speaker.find({})
+    Session.find({})
       .then((result) => {
         res.json(result);
       })
@@ -33,14 +31,14 @@ router.get('/:id', (req, res) => {
   router.post('/', (req, res) => {
   
   
-    let newSpeaker = new Speaker({
+    let newSession = new Session({
       name: sanitizeName(req.body.name),
-      email: sanitizeEmail(req.body.email),
-      phone: sanitizePhone(req.body.phone),
-      dayphone: sanitizePhone(req.body.dayphone)
+      timeslot: req.body.timeslot,
+      speaker: req.body.speaker,
+      room: req.body.room
     });
   
-    newSpeaker.save()
+    newSession.save()
       .then((result) => {
         res.json({
           success: true,
@@ -48,9 +46,9 @@ router.get('/:id', (req, res) => {
           result: {
             _id: result._id,
             name: result.name,
-            email: result.email,
-            phone: result.phone,
-            dayphone: result.dayphone
+            timeslot: result.timeslot,
+            speaker: result.speaker,
+            room: result.room
           }
         });
       })
@@ -60,16 +58,16 @@ router.get('/:id', (req, res) => {
             res.status(400).json({ success: false, msg: err.errors.name.message });
             return;
           }
-          if (err.errors.email) {
-            res.status(400).json({ success: false, msg: err.errors.email.message });
+          if (err.errors.timeslot) {
+            res.status(400).json({ success: false, msg: err.errors.timeslot.message });
             return;
           }
-          if (err.errors.phone) {
-            res.status(400).json({ success: false, msg: err.errors.phone.message });
+          if (err.errors.speaker) {
+            res.status(400).json({ success: false, msg: err.errors.speaker.message });
             return;
           }
-          if (err.errors.dayphone) {
-            res.status(400).json({ success: false, msg: err.errors.dayphone.message });
+          if (err.errors.room) {
+            res.status(400).json({ success: false, msg: err.errors.room.message });
             return;
           }
           // Show failed if all else fails for some reasons
@@ -81,16 +79,16 @@ router.get('/:id', (req, res) => {
   // UPDATE
   router.put('/:id', (req, res) => {
   
-    let updatedSpeaker = {
+    let updatedSession = {
       name: sanitizeName(req.body.name),
-      email: sanitizeEmail(req.body.email),
-      phone: sanitizePhone(req.body.phone),
-      dayphone: sanitizePhone(req.body.dayphone)
+      timeslot: req.body.timeslot,
+      speaker: req.body.speaker,
+      room: req.body.room
     };
   
-    Speaker.findOneAndUpdate({ _id: req.params.id }, updatedSpeaker, { runValidators: true, context: 'query' })
+    Session.findOneAndUpdate({ _id: req.params.id }, updatedSession, { runValidators: true, context: 'query' })
       .then((oldResult) => {
-        Speaker.findOne({ _id: req.params.id })
+        Session.findOne({ _id: req.params.id })
           .then((newResult) => {
             res.json({
               success: true,
@@ -98,9 +96,9 @@ router.get('/:id', (req, res) => {
               result: {
                 _id: newResult._id,
                 name: newResult.name,
-                email: newResult.email,
-                phone: newResult.phone,
-                dayphone: newResult.dayphone
+                timeslot: newResult.timeslot,
+                speaker: newResult.speaker,
+                room: newResult.room
               }
             });
           })
@@ -115,16 +113,16 @@ router.get('/:id', (req, res) => {
             res.status(400).json({ success: false, msg: err.errors.name.message });
             return;
           }
-          if (err.errors.email) {
-            res.status(400).json({ success: false, msg: err.errors.email.message });
+          if (err.errors.timeslot) {
+            res.status(400).json({ success: false, msg: err.errors.timeslot.message });
             return;
           }
-          if (err.errors.phone) {
-            res.status(400).json({ success: false, msg: err.errors.phone.message });
+          if (err.errors.speaker) {
+            res.status(400).json({ success: false, msg: err.errors.speaker.message });
             return;
           }
-          if (err.errors.dayphone) {
-            res.status(400).json({ success: false, msg: err.errors.dayphone.message });
+          if (err.errors.room) {
+            res.status(400).json({ success: false, msg: err.errors.room.message });
             return;
           }
           // Show failed if all else fails for some reasons
@@ -136,7 +134,7 @@ router.get('/:id', (req, res) => {
   // DELETE
   router.delete('/:id', (req, res) => {
   
-    Speaker.findByIdAndRemove(req.params.id)
+    Session.findByIdAndRemove(req.params.id)
       .then((result) => {
         res.json({
           success: true,
@@ -144,9 +142,9 @@ router.get('/:id', (req, res) => {
           result: {
             _id: result._id,
             name: result.name,
-            email: result.email,
-            phone: result.phone,
-            dayphone: result.dayphone
+            timeslot: result.timeslot,
+            speaker: result.speaker,
+            room: result.room
           }
         });
       })
@@ -161,10 +159,3 @@ router.get('/:id', (req, res) => {
   sanitizeName = (name) => {
     return stringCapitalizeName(name);
   }
-  sanitizeEmail = (email) => {
-    return email.toLowerCase();
-  }
-sanitizePhone = (phone) => {
-if (phone == '') return 'N/A';
-return phoneFormatter.format(phone, "(NNN) NNN-NNNN");
-}
